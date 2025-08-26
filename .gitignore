@@ -1,0 +1,13 @@
+# Docker volumes / temp files
+docker-compose.override.yml
+docker-compose.override.*.yml
+**/docker-compose.override.yml
+**/docker-compose.override.*.yml
+.env
+
+# =====================
+# Other
+# =====================
+*.log
+*.bak
+*.tmp

@@ -1,0 +1,13 @@
+# Composer vendor
+vendor/
+
+# Composer lock
+composer.lock
+
+# Configurações locais
+.env
+.php-cs-fixer.cache
+
+# OS / IDE files
+*.DS_Store
+*.vscode/
