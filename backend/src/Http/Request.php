@@ -17,7 +17,7 @@ class Request
 
         $data = match(self::method()) {
             'GET' => $_GET,
-            'POST', 'PUT', 'DELETE' => $json,
+            'POST', 'PUT', 'PATCH', 'DELETE' => $json,
             default => []
         };
 

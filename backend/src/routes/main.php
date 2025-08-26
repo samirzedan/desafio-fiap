@@ -14,6 +14,7 @@ Route::get('/students/{id}', 'StudentController@fetch', [AuthMiddleware::class])
 Route::post('/students', 'StudentController@store', [AuthMiddleware::class]);
 Route::put('/students/{id}', 'StudentController@update', [AuthMiddleware::class]);
 Route::delete('/students/{id}', 'StudentController@delete', [AuthMiddleware::class]);
+Route::patch('/students/{id}/assign-class', 'StudentController@assignToClass', [AuthMiddleware::class]);
 
 // Turmas
 Route::get('/classes', 'FiapClassController@index', [AuthMiddleware::class]);

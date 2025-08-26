@@ -113,4 +113,25 @@ class StudentController
             return $response::error(exception: $e);
         }
     }
+
+    public function assignToClass(Request $request, Response $response, array $id)
+    {
+        try {
+            $fields = Validator::validate($request::body(), [
+                'class_id' => ['required', 'numeric', 'integer', 'min:1'],
+            ]);
+
+            $studentService = StudentService::assignToClass($id[0], $fields['class_id']);
+
+            if (isset($studentService['error'])) {
+                return $response::error(message: $studentService['error'], status: 400);
+            }
+
+            return $response::success(data: ['message' => 'Student deleted successfully'], status: 200);
+        } catch (ValidationException $e) {
+            return $response::error(exception: $e, status: 422, params: ['errors' => $e->getErrors()]);
+        } catch (Exception $e) {
+            return $response::error(exception: $e);
+        }
+    }
 }

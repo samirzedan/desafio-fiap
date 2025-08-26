@@ -116,4 +116,24 @@ class StudentService
             return ['error' => $e->getMessage()];
         }
     }
+
+    public static function assignToClass(int $id, int $class_id)
+    {
+        try {
+            $updated = Student::assignToClass($id, $class_id);
+
+            if (!$updated) {
+                return ['error' => 'Sorry, we could not update the student.'];
+            }
+
+            return "Student updated successfully!";
+        } catch (PDOException $e) {
+            if ($e->errorInfo[0] === '08006') {
+                return ['error' => 'Sorry, we could not connect to the database.'];
+            }
+            return ['error' => $e->errorInfo[0]];
+        } catch (Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
 }

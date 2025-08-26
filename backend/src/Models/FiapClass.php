@@ -15,10 +15,10 @@ class FiapClass extends Model
 
         $where = '';
         if ($query) {
-            $where = "WHERE nome LIKE :query";
+            $where = "WHERE t.nome LIKE :query";
         }
 
-        $countStmt = $pdo->prepare("SELECT COUNT(*) as total FROM turmas $where");
+        $countStmt = $pdo->prepare("SELECT COUNT(*) as total FROM turmas t $where");
         if ($query) {
             $countStmt->bindValue(':query', "%$query%", PDO::PARAM_STR);
         }
@@ -26,10 +26,14 @@ class FiapClass extends Model
         $total = (int) $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
 
         $stmt = $pdo->prepare("
-            SELECT id, nome, descricao
-            FROM turmas
+            SELECT 
+                t.id, t.nome, t.descricao,
+                COUNT(a.id) AS total_alunos
+            FROM turmas t
+            LEFT JOIN alunos a ON a.turma_id = t.id
             $where
-            ORDER BY nome ASC
+            GROUP BY t.id, t.nome, t.descricao
+            ORDER BY t.nome ASC
             LIMIT :limit OFFSET :offset
         ");
 
@@ -40,7 +44,7 @@ class FiapClass extends Model
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 
         $stmt->execute();
-        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $pages = (int) ceil($total / $limit);
 
@@ -48,7 +52,7 @@ class FiapClass extends Model
             'total' => $total,
             'pages' => $pages,
             'current_page' => $page,
-            'data' => $students
+            'data' => $classes
         ];
     }
 
@@ -57,13 +61,29 @@ class FiapClass extends Model
         $pdo = self::getConnection();
 
         $stmt = $pdo->prepare("
-            SELECT id, nome, descricao FROM turmas
+            SELECT id, nome, descricao
+            FROM turmas
             WHERE id = ?
         ");
-
         $stmt->execute([$id]);
+        $turma = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$turma) {
+            return null;
+        }
+
+        $stmt = $pdo->prepare("
+            SELECT nome, email
+            FROM alunos
+            WHERE turma_id = ?
+            ORDER BY nome ASC
+        ");
+        $stmt->execute([$id]);
+        $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $turma['alunos'] = $alunos;
+
+        return $turma;
     }
 
     public static function save(array $data)

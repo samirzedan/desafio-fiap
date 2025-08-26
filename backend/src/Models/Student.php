@@ -15,10 +15,10 @@ class Student extends Model
 
         $where = '';
         if ($query) {
-            $where = "WHERE nome LIKE :query";
+            $where = "WHERE a.nome LIKE :query";
         }
 
-        $countStmt = $pdo->prepare("SELECT COUNT(*) as total FROM alunos $where");
+        $countStmt = $pdo->prepare("SELECT COUNT(*) as total FROM alunos a $where");
         if ($query) {
             $countStmt->bindValue(':query', "%$query%", PDO::PARAM_STR);
         }
@@ -26,10 +26,13 @@ class Student extends Model
         $total = (int) $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
 
         $stmt = $pdo->prepare("
-            SELECT id, nome, data_nascimento, cpf, email
-            FROM alunos
+            SELECT 
+                a.id, a.nome, a.data_nascimento, a.cpf, a.email,
+                t.id AS turma_id, t.nome AS turma_nome, t.descricao AS turma_descricao
+            FROM alunos a
+            LEFT JOIN turmas t ON a.turma_id = t.id
             $where
-            ORDER BY nome ASC
+            ORDER BY a.nome ASC
             LIMIT :limit OFFSET :offset
         ");
 
@@ -123,6 +126,21 @@ class Student extends Model
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
         $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
+    public static function assignToClass(int $studentId, int $classId)
+    {
+        $pdo = self::getConnection();
+
+        $stmt = $pdo->prepare("
+            UPDATE alunos
+            SET turma_id = ?
+            WHERE id = ?
+        ");
+
+        $stmt->execute([$classId, $studentId]);
 
         return $stmt->rowCount() > 0;
     }
