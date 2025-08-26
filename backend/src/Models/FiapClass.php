@@ -4,7 +4,7 @@ namespace App\Models;
 
 use PDO;
 
-class Student extends Model
+class FiapClass extends Model
 {
     public static function all(int $page = 1, ?string $query = null)
     {
@@ -18,7 +18,7 @@ class Student extends Model
             $where = "WHERE nome LIKE :query";
         }
 
-        $countStmt = $pdo->prepare("SELECT COUNT(*) as total FROM alunos $where");
+        $countStmt = $pdo->prepare("SELECT COUNT(*) as total FROM turmas $where");
         if ($query) {
             $countStmt->bindValue(':query', "%$query%", PDO::PARAM_STR);
         }
@@ -26,8 +26,8 @@ class Student extends Model
         $total = (int) $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
 
         $stmt = $pdo->prepare("
-            SELECT id, nome, data_nascimento, cpf, email
-            FROM alunos
+            SELECT id, nome, descricao
+            FROM turmas
             $where
             ORDER BY nome ASC
             LIMIT :limit OFFSET :offset
@@ -57,7 +57,7 @@ class Student extends Model
         $pdo = self::getConnection();
 
         $stmt = $pdo->prepare("
-            SELECT id, nome, data_nascimento, cpf, email FROM alunos
+            SELECT id, nome, descricao FROM turmas
             WHERE id = ?
         ");
 
@@ -71,16 +71,13 @@ class Student extends Model
         $pdo = self::getConnection();
 
         $stmt = $pdo->prepare("
-            INSERT INTO alunos (nome, data_nascimento, cpf, email, senha)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO turmas (nome, descricao)
+            VALUES (?, ?)
         ");
 
         $stmt->execute([
             $data['nome'],
-            $data['data_nascimento'],
-            $data['cpf'],
-            $data['email'],
-            $data['senha'],
+            $data['descricao'],
         ]);
 
         return $pdo->lastInsertId() > 0 ? true : false;
@@ -105,7 +102,7 @@ class Student extends Model
         $values[] = $id;
 
         $stmt = $pdo->prepare("
-            UPDATE alunos
+            UPDATE turmas
             SET " . implode(', ', $fields) . "
             WHERE id = ?
         ");
@@ -119,7 +116,7 @@ class Student extends Model
     {
         $pdo = self::getConnection();
 
-        $stmt = $pdo->prepare("DELETE FROM alunos WHERE id = :id");
+        $stmt = $pdo->prepare("DELETE FROM turmas WHERE id = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
         $stmt->execute();

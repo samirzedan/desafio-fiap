@@ -2,18 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\Student;
+use App\Models\FiapClass;
 use Exception;
 use PDOException;
 
-class StudentService
+class FiapClassService
 {
     public static function index(int $page = 1, ?string $query = null)
     {
         try {
-            $students = Student::all($page, $query);
+            $classs = FiapClass::all($page, $query);
 
-            return $students;
+            return $classs;
         } catch (PDOException $e) {
             if ($e->errorInfo[0] === '08006') {
                 return ['error' => 'Sorry, we could not connect to the database.'];
@@ -27,13 +27,13 @@ class StudentService
     public static function fetch(int $id)
     {
         try {
-            $student = Student::find($id);
+            $class = FiapClass::find($id);
 
-            if (!$student) {
-                return ['error' => 'Sorry, we could not find the student.'];
+            if (!$class) {
+                return ['error' => 'Sorry, we could not find the class.'];
             }
 
-            return $student;
+            return $class;
         } catch (PDOException $e) {
             if ($e->errorInfo[0] === '08006') {
                 return ['error' => 'Sorry, we could not connect to the database.'];
@@ -47,22 +47,20 @@ class StudentService
     public static function create(array $fields)
     {
         try {
-            $fields['senha'] = password_hash($fields['senha'], PASSWORD_DEFAULT);
+            $class = FiapClass::save($fields);
 
-            $student = Student::save($fields);
-
-            if (!$student) {
-                return ['error' => 'Sorry, we could not create the student.'];
+            if (!$class) {
+                return ['error' => 'Sorry, we could not create the class.'];
             }
 
-            return "Student created successfully!";
+            return "Class created successfully!";
 
         } catch (PDOException $e) {
             if ($e->errorInfo[0] === '08006') {
                 return ['error' => 'Sorry, we could not connect to the database.'];
             }
             if ($e->errorInfo[0] === '23505') {
-                return ['error' => 'Sorry, student already exists.'];
+                return ['error' => 'Sorry, class already exists.'];
             }
             return ['error' => $e->errorInfo[0]];
         } catch (Exception $e) {
@@ -73,23 +71,19 @@ class StudentService
     public static function update(int $id, array $fields)
     {
         try {
-            if (isset($fields['senha'])) {
-                $fields['senha'] = password_hash($fields['senha'], PASSWORD_DEFAULT);
-            }
-
-            $updated = Student::update($id, $fields);
+            $updated = FiapClass::update($id, $fields);
 
             if (!$updated) {
-                return ['error' => 'Sorry, we could not update the student.'];
+                return ['error' => 'Sorry, we could not update the class.'];
             }
 
-            return "Student updated successfully!";
+            return "Class updated successfully!";
         } catch (PDOException $e) {
             if ($e->errorInfo[0] === '08006') {
                 return ['error' => 'Sorry, we could not connect to the database.'];
             }
             if ($e->errorInfo[0] === '23505') {
-                return ['error' => 'Sorry, student already exists.'];
+                return ['error' => 'Sorry, class already exists.'];
             }
             return ['error' => $e->errorInfo[0]];
         } catch (Exception $e) {
@@ -100,10 +94,10 @@ class StudentService
     public static function delete(int $id)
     {
         try {
-            $deleted = Student::delete($id);
+            $deleted = FiapClass::delete($id);
 
             if (!$deleted) {
-                return ['error' => 'Student not found or could not be deleted.'];
+                return ['error' => 'Class not found or could not be deleted.'];
             }
 
             return ['success' => true];

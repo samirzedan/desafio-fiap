@@ -14,3 +14,10 @@ Route::get('/students/{id}', 'StudentController@fetch', [AuthMiddleware::class])
 Route::post('/students', 'StudentController@store', [AuthMiddleware::class]);
 Route::put('/students/{id}', 'StudentController@update', [AuthMiddleware::class]);
 Route::delete('/students/{id}', 'StudentController@delete', [AuthMiddleware::class]);
+
+// Turmas
+Route::get('/classes', 'FiapClassController@index', [AuthMiddleware::class]);
+Route::get('/classes/{id}', 'FiapClassController@fetch', [AuthMiddleware::class]);
+Route::post('/classes', 'FiapClassController@store', [AuthMiddleware::class]);
+Route::put('/classes/{id}', 'FiapClassController@update', [AuthMiddleware::class]);
+Route::delete('/classes/{id}', 'FiapClassController@delete', [AuthMiddleware::class]);
