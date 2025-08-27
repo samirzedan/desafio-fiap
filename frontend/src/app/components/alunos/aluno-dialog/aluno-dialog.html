@@ -1,0 +1,28 @@
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
+    <!-- Botão fechar -->
+    <button (click)="onClose()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+      ✕
+    </button>
+
+    <!-- Conteúdo do modal -->
+    <h2 class="text-xl font-bold mb-4">Título do Dialog</h2>
+    <p class="mb-4">Este é o conteúdo do seu modal/dialog.</p>
+
+    <!-- Ações -->
+    <div class="flex justify-end gap-2">
+      <button
+        (click)="onClose()"
+        class="cursor-pointer px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+      >
+        Cancelar
+      </button>
+      <button
+        (click)="onSave()"
+        class="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>

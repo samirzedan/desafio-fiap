@@ -5,7 +5,26 @@
   "projects": {
     "desafio-fiap": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular": {
+          "component": {
+            "style": "css",
+            "skipTests": true
+          },
+          "service": {
+            "skipTests": true
+          },
+          "directive": {
+            "skipTests": true
+          },
+          "class": {
+            "skipTests": true
+          },
+          "pipe": {
+            "skipTests": true
+          }
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
