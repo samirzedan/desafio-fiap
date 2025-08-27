@@ -1,25 +1,8 @@
 import { Component, inject } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { map } from 'rxjs';
 import { Auth } from '../../services/auth';
-
-export function strongPasswordValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value;
-
-  if (!value) return null;
-
-  const strongPasswordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  return strongPasswordRegex.test(value) ? null : { senhaFraca: true };
-}
 
 @Component({
   selector: 'app-login',
@@ -42,13 +25,21 @@ export class Login {
       return;
     }
     const body = this.form.value;
-    this._authService.login(body).subscribe({
-      next: (res) => {
-        this._router.navigateByUrl('/turmas');
-      },
-      error: (err) => {
-        alert(err.error.message);
-      },
-    });
+    this._authService
+      .login(body)
+      .pipe(map((res) => (res.success ? res.data : null)))
+      .subscribe({
+        next: (token) => {
+          if (!token) {
+            alert('Ocorreu um erro ao entrar!');
+            return;
+          }
+          this._authService.setToken(token);
+          this._router.navigate(['/turmas']);
+        },
+        error: (err) => {
+          alert('Ocorreu um erro ao entrar!');
+        },
+      });
   }
 }

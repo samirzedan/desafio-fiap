@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -7,6 +7,8 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { Auth } from '../../services/auth';
 
 export function strongPasswordValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -21,13 +23,37 @@ export function strongPasswordValidator(control: AbstractControl): ValidationErr
 
 @Component({
   selector: 'app-cadastro',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './cadastro.html',
   styleUrl: './cadastro.css',
 })
 export class Cadastro {
+  private _authService = inject(Auth);
+  private _router = inject(Router);
+
   protected form: FormGroup = new FormGroup({
+    nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     senha: new FormControl('', [Validators.required, strongPasswordValidator]),
   });
+
+  protected onSignUp(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const body = this.form.value;
+    this._authService.signUp(body).subscribe({
+      next: (res) => {
+        if (!res.success) {
+          alert('Ocorreu um erro ao criar sua conta!');
+          return;
+        }
+        this._router.navigate(['/login']);
+      },
+      error: (err) => {
+        alert('Ocorreu um erro ao criar sua conta!');
+      },
+    });
+  }
 }

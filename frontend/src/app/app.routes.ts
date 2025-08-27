@@ -4,6 +4,8 @@ import { Cadastro } from './components/cadastro/cadastro';
 import { Layout } from './components/layout/layout';
 import { Login } from './components/login/login';
 import { Turmas } from './components/turmas/turmas';
+import { authGuard } from './core/guards/auth-guard';
+import { guestGuard } from './core/guards/guest-guard';
 
 export const routes: Routes = [
   {
@@ -12,14 +14,17 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    canActivate: [guestGuard],
     path: 'login',
     component: Login,
   },
   {
+    canActivate: [guestGuard],
     path: 'cadastro',
     component: Cadastro,
   },
   {
+    canActivate: [authGuard],
     path: '',
     component: Layout,
     children: [
