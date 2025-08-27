@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { SystemConstants } from '../config/system.constants';
 
 @Injectable({
@@ -16,6 +16,11 @@ export class Auth {
 
   public login(body: any): Observable<any> {
     return this._http.post(`${this._url}/users/login`, body);
+  }
+
+  public logout(): Observable<any> {
+    this.clearToken();
+    return of(true);
   }
 
   public signUp(body: any): Observable<any> {
@@ -38,5 +43,10 @@ export class Auth {
     return (
       !!sessionStorage.getItem(this._tokenKey) && sessionStorage.getItem(this._tokenKey) !== 'null'
     );
+  }
+
+  public clearToken(): void {
+    this._isLoggedIn.next(false);
+    sessionStorage.removeItem(this._tokenKey);
   }
 }
