@@ -11,7 +11,7 @@ use Exception;
 
 class StudentController
 {
-    public function index(Request $request, Response $response, array $id)
+    public function index(Request $request, Response $response)
     {
         try {
             $fields = Validator::validate($request::body(), [
@@ -23,6 +23,21 @@ class StudentController
             $query = $fields['query'] ?? null;
 
             $studentService = StudentService::index($page, $query);
+
+            if (isset($studentService['error'])) {
+                return $response::error(message: $studentService['error'], status: 400);
+            }
+
+            return $response::success(data: $studentService, status: 200);
+        } catch (Exception $e) {
+            return $response::error(exception: $e);
+        }
+    }
+
+    public function indexAll(Request $request, Response $response)
+    {
+        try {
+            $studentService = StudentService::indexAll();
 
             if (isset($studentService['error'])) {
                 return $response::error(message: $studentService['error'], status: 400);
@@ -117,7 +132,7 @@ class StudentController
     {
         try {
             $fields = Validator::validate($request::body(), [
-                'class_id' => ['required', 'numeric', 'integer', 'min:1'],
+                'class_id' => ['nullable', 'numeric', 'integer', 'min:1'],
             ]);
 
             $studentService = StudentService::assignToClass($id[0], $fields['class_id']);

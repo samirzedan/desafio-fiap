@@ -17,6 +17,10 @@ export class Turma {
     return this._http.get(`${this._url}/classes?${params.toString()}`);
   }
 
+  public listAll(): Observable<any> {
+    return this._http.get(`${this._url}/classes-all`);
+  }
+
   public show(turmaId: number): Observable<any> {
     return this._http.get(`${this._url}/classes/${turmaId}`);
   }

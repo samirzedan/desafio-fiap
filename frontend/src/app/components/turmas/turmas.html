@@ -92,15 +92,23 @@
           <td class="px-6 py-4 text-center">{{ turma.total_alunos ?? '-' }}</td>
           <td class="px-6 py-4 text-center">
             <a
-              (click)="onEditTurma(turma)"
-              class="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >Editar</a
+              (click)="onViewAlunos(turma.id)"
+              class="cursor-pointer font-medium text-purple-600 dark:text-purple-500 hover:underline"
             >
+              Alunos
+            </a>
             <a
-              (click)="onDeleteTurma(turma.id)"
-              class="cursor-pointer font-medium text-red-600 dark:text-red-500 hover:underline ml-2"
-              >Excluir</a
+              (click)="onEditTurma(turma)"
+              class="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline ml-2"
             >
+              Editar
+            </a>
+            <a
+              (click)="onDeleteTurma(turma)"
+              class="cursor-pointer font-medium text-red-600 dark:text-red-500 hover:underline ml-2"
+            >
+              Excluir
+            </a>
           </td>
         </tr>
         }
@@ -158,4 +166,12 @@
   [(opened)]="turmaDialogOpened"
   (saved)="onDialogClosed($event)"
 ></app-turma-dialog>
+}
+
+<!-- Turma Alunos Dialog -->
+@if(turmaAlunosDialogOpened) {
+<app-turma-alunos-dialog
+  [turma]="turmaSelectedToView"
+  [(opened)]="turmaAlunosDialogOpened"
+></app-turma-alunos-dialog>
 }

@@ -11,7 +11,23 @@ class StudentService
     public static function index(int $page = 1, ?string $query = null)
     {
         try {
-            $students = Student::all($page, $query);
+            $students = Student::allPaginate($page, $query);
+
+            return $students;
+        } catch (PDOException $e) {
+            if ($e->errorInfo[0] === '08006') {
+                return ['error' => 'Sorry, we could not connect to the database.'];
+            }
+            return ['error' => $e->errorInfo[0]];
+        } catch (Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public static function indexAll()
+    {
+        try {
+            $students = Student::all();
 
             return $students;
         } catch (PDOException $e) {
@@ -113,7 +129,7 @@ class StudentService
         }
     }
 
-    public static function assignToClass(int $id, int $class_id)
+    public static function assignToClass(int $id, int | null $class_id)
     {
         try {
             $updated = Student::assignToClass($id, $class_id);

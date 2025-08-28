@@ -6,7 +6,7 @@ use PDO;
 
 class FiapClass extends Model
 {
-    public static function all(int $page = 1, ?string $query = null)
+    public static function allPaginate(int $page = 1, ?string $query = null)
     {
         $limit = 10;
         $offset = ($page - 1) * $limit;
@@ -54,6 +54,26 @@ class FiapClass extends Model
             'current_page' => $page,
             'data' => $classes
         ];
+    }
+
+    public static function all()
+    {
+        $pdo = self::getConnection();
+
+        $stmt = $pdo->prepare("
+            SELECT 
+                t.id, t.nome, t.descricao,
+                COUNT(a.id) AS total_alunos
+            FROM turmas t
+            LEFT JOIN alunos a ON a.turma_id = t.id
+            GROUP BY t.id, t.nome, t.descricao
+            ORDER BY t.nome ASC
+        ");
+
+        $stmt->execute();
+        $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $classes;
     }
 
     public static function find(int $id)

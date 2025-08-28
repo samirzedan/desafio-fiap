@@ -86,16 +86,33 @@
           <td class="px-6 py-4 text-left">{{ aluno.email }}</td>
           <td class="px-6 py-4 text-center">{{ aluno.turma_nome ?? '-' }}</td>
           <td class="px-6 py-4 text-center">
+            @if (aluno.turma_id) {
+            <a
+              (click)="onDesmatricular(aluno.id)"
+              class="cursor-pointer font-medium text-amber-600 dark:text-amber-500 hover:underline"
+            >
+              Desmatricular
+            </a>
+            } @else {
+            <a
+              (click)="onMatricular(aluno.id, 1)"
+              class="cursor-pointer font-medium text-emerald-600 dark:text-emerald-500 hover:underline"
+            >
+              Matricular
+            </a>
+            }
             <a
               (click)="onEditAluno(aluno)"
-              class="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >Editar</a
+              class="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline ml-2"
             >
+              Editar
+            </a>
             <a
               (click)="onDeleteAluno(aluno.id)"
               class="cursor-pointer font-medium text-red-600 dark:text-red-500 hover:underline ml-2"
-              >Excluir</a
             >
+              Excluir
+            </a>
           </td>
         </tr>
         }

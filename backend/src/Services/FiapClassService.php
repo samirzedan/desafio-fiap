@@ -11,7 +11,23 @@ class FiapClassService
     public static function index(int $page = 1, ?string $query = null)
     {
         try {
-            $classs = FiapClass::all($page, $query);
+            $classs = FiapClass::allPaginate($page, $query);
+
+            return $classs;
+        } catch (PDOException $e) {
+            if ($e->errorInfo[0] === '08006') {
+                return ['error' => 'Sorry, we could not connect to the database.'];
+            }
+            return ['error' => $e->errorInfo[0]];
+        } catch (Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public static function indexAll()
+    {
+        try {
+            $classs = FiapClass::all();
 
             return $classs;
         } catch (PDOException $e) {

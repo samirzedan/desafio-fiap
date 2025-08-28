@@ -49,10 +49,22 @@ export class Alunos {
     this.currentPage$.next(page);
   }
 
-  protected onDialogClosed(event: any) {
+  protected onDialogClosed(event: any): void {
     if (event) {
       this.onPageNavigate(1);
     }
+  }
+
+  protected onDesmatricular(alunoId: number): void {
+    this._alunoService.assignClass(alunoId, null).subscribe(() => {
+      this.onPageNavigate(1);
+    });
+  }
+
+  protected onMatricular(alunoId: number, turmaId: number): void {
+    this._alunoService.assignClass(alunoId, turmaId).subscribe(() => {
+      this.onPageNavigate(1);
+    });
   }
 
   protected get pagesArray(): number[] {

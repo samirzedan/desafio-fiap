@@ -10,6 +10,7 @@ Route::get('/users/me', 'UserController@fetch', [AuthMiddleware::class]);
 
 // Alunos
 Route::get('/students', 'StudentController@index', [AuthMiddleware::class]);
+Route::get('/students-all', 'StudentController@indexAll', [AuthMiddleware::class]);
 Route::get('/students/{id}', 'StudentController@fetch', [AuthMiddleware::class]);
 Route::post('/students', 'StudentController@store', [AuthMiddleware::class]);
 Route::put('/students/{id}', 'StudentController@update', [AuthMiddleware::class]);
@@ -18,6 +19,7 @@ Route::patch('/students/{id}/assign-class', 'StudentController@assignToClass', [
 
 // Turmas
 Route::get('/classes', 'FiapClassController@index', [AuthMiddleware::class]);
+Route::get('/classes-all', 'FiapClassController@indexAll', [AuthMiddleware::class]);
 Route::get('/classes/{id}', 'FiapClassController@fetch', [AuthMiddleware::class]);
 Route::post('/classes', 'FiapClassController@store', [AuthMiddleware::class]);
 Route::put('/classes/{id}', 'FiapClassController@update', [AuthMiddleware::class]);

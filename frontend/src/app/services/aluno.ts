@@ -17,6 +17,10 @@ export class Aluno {
     return this._http.get(`${this._url}/students?${params.toString()}`);
   }
 
+  public listAll(): Observable<any> {
+    return this._http.get(`${this._url}/students-all`);
+  }
+
   public show(alunoId: number): Observable<any> {
     return this._http.get(`${this._url}/students/${alunoId}`);
   }
@@ -31,5 +35,9 @@ export class Aluno {
 
   public delete(alunoId: number): Observable<any> {
     return this._http.delete(`${this._url}/students/${alunoId}`);
+  }
+
+  public assignClass(alunoId: number, turmaId?: number | null): Observable<any> {
+    return this._http.patch(`${this._url}/students/${alunoId}/assign-class`, { class_id: turmaId });
   }
 }

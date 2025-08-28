@@ -6,7 +6,7 @@ use PDO;
 
 class Student extends Model
 {
-    public static function all(int $page = 1, ?string $query = null)
+    public static function allPaginate(int $page = 1, ?string $query = null)
     {
         $limit = 10;
         $offset = ($page - 1) * $limit;
@@ -53,6 +53,25 @@ class Student extends Model
             'current_page' => $page,
             'data' => $students
         ];
+    }
+
+    public static function all()
+    {
+        $pdo = self::getConnection();
+
+        $stmt = $pdo->prepare("
+            SELECT 
+                a.id, a.nome, a.data_nascimento, a.cpf, a.email,
+                t.id AS turma_id, t.nome AS turma_nome
+            FROM alunos a
+            LEFT JOIN turmas t ON a.turma_id = t.id
+            ORDER BY a.nome ASC
+        ");
+
+        $stmt->execute();
+        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $students;
     }
 
     public static function find(int $id)
@@ -130,7 +149,7 @@ class Student extends Model
         return $stmt->rowCount() > 0;
     }
 
-    public static function assignToClass(int $studentId, int $classId)
+    public static function assignToClass(int $studentId, int | null $classId)
     {
         $pdo = self::getConnection();
 

@@ -11,7 +11,7 @@ use Exception;
 
 class FiapClassController
 {
-    public function index(Request $request, Response $response, array $id)
+    public function index(Request $request, Response $response)
     {
         try {
             $fields = Validator::validate($request::body(), [
@@ -23,6 +23,21 @@ class FiapClassController
             $query = $fields['query'] ?? null;
 
             $classService = FiapClassService::index($page, $query);
+
+            if (isset($classService['error'])) {
+                return $response::error(message: $classService['error'], status: 400);
+            }
+
+            return $response::success(data: $classService, status: 200);
+        } catch (Exception $e) {
+            return $response::error(exception: $e);
+        }
+    }
+
+    public function indexAll(Request $request, Response $response)
+    {
+        try {
+            $classService = FiapClassService::indexAll();
 
             if (isset($classService['error'])) {
                 return $response::error(message: $classService['error'], status: 400);
