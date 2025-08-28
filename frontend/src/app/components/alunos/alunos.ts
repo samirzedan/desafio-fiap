@@ -4,10 +4,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, combineLatest, startWith, switchMap, tap } from 'rxjs';
 import { Aluno } from '../../services/aluno';
 import { AlunoDialog } from './aluno-dialog/aluno-dialog';
+import { AlunoTurmasDialog } from './aluno-turmas-dialog/aluno-turmas-dialog';
 
 @Component({
   selector: 'app-alunos',
-  imports: [CommonModule, ReactiveFormsModule, AlunoDialog],
+  imports: [CommonModule, ReactiveFormsModule, AlunoDialog, AlunoTurmasDialog],
   templateUrl: './alunos.html',
   styleUrl: './alunos.css',
 })
@@ -15,10 +16,12 @@ export class Alunos {
   private _alunoService = inject(Aluno);
 
   protected alunoDialogOpened = false;
+  protected alunoTurmasDialogOpened = false;
   protected totalPages: number = 0;
   protected queryCtrl = new FormControl<string>('');
   protected currentPage$ = new BehaviorSubject<number>(1);
   protected alunoSelected: any;
+  protected alunoTurmasSelected: any;
 
   protected alunos$ = combineLatest([
     this.queryCtrl.valueChanges.pipe(startWith(this.queryCtrl.value)),
@@ -40,9 +43,15 @@ export class Alunos {
     this.alunoDialogOpened = true;
   }
 
+  protected onOpenMatriculaDialog(aluno: any): void {
+    this.alunoTurmasSelected = aluno;
+    this.alunoTurmasDialogOpened = true;
+  }
+
   protected onDeleteAluno(alunoId: number): void {
-    this._alunoService.delete(alunoId).subscribe();
-    this.onPageNavigate(1);
+    this._alunoService.delete(alunoId).subscribe(() => {
+      this.onPageNavigate(1);
+    });
   }
 
   protected onPageNavigate(page: number): void {
@@ -53,6 +62,14 @@ export class Alunos {
     if (event) {
       this.onPageNavigate(1);
     }
+  }
+
+  public onTurmasDialogClosed(event: { turmaId: number; alunoId: number } | null): void {
+    if (!event) {
+      return;
+    }
+
+    this.onMatricular(event.alunoId, event.turmaId);
   }
 
   protected onDesmatricular(alunoId: number): void {

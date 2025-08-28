@@ -38,6 +38,7 @@ export class Aluno {
   }
 
   public assignClass(alunoId: number, turmaId?: number | null): Observable<any> {
-    return this._http.patch(`${this._url}/students/${alunoId}/assign-class`, { class_id: turmaId });
+    const classId = turmaId !== null && turmaId !== undefined ? Number(turmaId) : null;
+    return this._http.patch(`${this._url}/students/${alunoId}/assign-class`, { class_id: classId });
   }
 }

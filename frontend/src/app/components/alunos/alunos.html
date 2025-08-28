@@ -95,7 +95,7 @@
             </a>
             } @else {
             <a
-              (click)="onMatricular(aluno.id, 1)"
+              (click)="onOpenMatriculaDialog(aluno)"
               class="cursor-pointer font-medium text-emerald-600 dark:text-emerald-500 hover:underline"
             >
               Matricular
@@ -170,4 +170,13 @@
   [(opened)]="alunoDialogOpened"
   (saved)="onDialogClosed($event)"
 ></app-aluno-dialog>
+}
+
+<!-- Aluno Turmas Dialog -->
+@if(alunoTurmasDialogOpened) {
+<app-aluno-turmas-dialog
+  [aluno]="alunoTurmasSelected"
+  [(opened)]="alunoTurmasDialogOpened"
+  (turmaSelected)="onTurmasDialogClosed($event)"
+></app-aluno-turmas-dialog>
 }
