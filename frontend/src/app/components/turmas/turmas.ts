@@ -36,7 +36,6 @@ export class Turmas {
   protected onViewAlunos(turmaId: number): void {
     this._turmaService.show(turmaId).subscribe((res) => {
       this.turmaSelectedToView = res.data;
-      console.log(this.turmaSelectedToView);
       this.turmaAlunosDialogOpened = true;
     });
   }
