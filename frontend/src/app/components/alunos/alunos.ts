@@ -18,6 +18,7 @@ export class Alunos {
   protected totalPages: number = 0;
   protected queryCtrl = new FormControl<string>('');
   protected currentPage$ = new BehaviorSubject<number>(1);
+  protected alunoSelected: any;
 
   protected alunos$ = combineLatest([
     this.queryCtrl.valueChanges.pipe(startWith(this.queryCtrl.value)),
@@ -29,12 +30,29 @@ export class Alunos {
     })
   );
 
-  protected onCreateStudent(): void {
+  protected onCreateAluno(): void {
+    this.alunoSelected = null;
     this.alunoDialogOpened = true;
+  }
+
+  protected onEditAluno(aluno: any): void {
+    this.alunoSelected = aluno;
+    this.alunoDialogOpened = true;
+  }
+
+  protected onDeleteAluno(alunoId: number): void {
+    this._alunoService.delete(alunoId).subscribe();
+    this.onPageNavigate(1);
   }
 
   protected onPageNavigate(page: number): void {
     this.currentPage$.next(page);
+  }
+
+  protected onDialogClosed(event: any) {
+    if (event) {
+      this.onPageNavigate(1);
+    }
   }
 
   protected get pagesArray(): number[] {

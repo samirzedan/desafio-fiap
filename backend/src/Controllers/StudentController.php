@@ -82,7 +82,6 @@ class StudentController
                 'data_nascimento' => ['required', 'date'],
                 'cpf' => ['required', 'string', 'cpf'],
                 'email' => ['required', 'email', 'max:255'],
-                'senha' => ['required', 'string', 'strong_password', 'min:8', 'max:255'],
             ]);
 
             $studentService = StudentService::update($id[0], $fields);

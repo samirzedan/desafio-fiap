@@ -73,10 +73,6 @@ class StudentService
     public static function update(int $id, array $fields)
     {
         try {
-            if (isset($fields['senha'])) {
-                $fields['senha'] = password_hash($fields['senha'], PASSWORD_DEFAULT);
-            }
-
             $updated = Student::update($id, $fields);
 
             if (!$updated) {

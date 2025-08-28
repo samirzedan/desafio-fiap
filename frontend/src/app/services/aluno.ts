@@ -16,4 +16,16 @@ export class Aluno {
     if (page != null) params.set('page', page.toString());
     return this._http.get(`${this._url}/students?${params.toString()}`);
   }
+
+  public create(body: any): Observable<any> {
+    return this._http.post(`${this._url}/students`, body);
+  }
+
+  public update(alunoId: number, body: any): Observable<any> {
+    return this._http.put(`${this._url}/students/${alunoId}`, body);
+  }
+
+  public delete(alunoId: number): Observable<any> {
+    return this._http.delete(`${this._url}/students/${alunoId}`);
+  }
 }
