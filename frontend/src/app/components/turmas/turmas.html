@@ -38,7 +38,7 @@
       >
         <button
           type="button"
-          (click)="onCreateStudent()"
+          (click)="onCreateTurma()"
           class="flex items-center justify-center px-4 py-2 cursor-pointer text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
         >
           <svg
@@ -91,10 +91,14 @@
           </td>
           <td class="px-6 py-4 text-center">{{ turma.total_alunos ?? '-' }}</td>
           <td class="px-6 py-4 text-center">
-            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            <a
+              (click)="onEditTurma(turma)"
+              class="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline"
               >Editar</a
             >
-            <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ml-2"
+            <a
+              (click)="onDeleteTurma(turma.id)"
+              class="cursor-pointer font-medium text-red-600 dark:text-red-500 hover:underline ml-2"
               >Excluir</a
             >
           </td>
@@ -149,5 +153,9 @@
 
 <!-- Turma Dialog -->
 @if(turmaDialogOpened) {
-<app-turma-dialog [(opened)]="turmaDialogOpened"></app-turma-dialog>
+<app-turma-dialog
+  [turma]="turmaSelected"
+  [(opened)]="turmaDialogOpened"
+  (saved)="onDialogClosed($event)"
+></app-turma-dialog>
 }

@@ -16,4 +16,20 @@ export class Turma {
     if (page != null) params.set('page', page.toString());
     return this._http.get(`${this._url}/classes?${params.toString()}`);
   }
+
+  public show(turmaId: number): Observable<any> {
+    return this._http.get(`${this._url}/classes/${turmaId}`);
+  }
+
+  public create(body: any): Observable<any> {
+    return this._http.post(`${this._url}/classes`, body);
+  }
+
+  public update(turmaId: number, body: any): Observable<any> {
+    return this._http.put(`${this._url}/classes/${turmaId}`, body);
+  }
+
+  public delete(turmaId: number): Observable<any> {
+    return this._http.delete(`${this._url}/classes/${turmaId}`);
+  }
 }

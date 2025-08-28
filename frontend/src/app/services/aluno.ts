@@ -17,6 +17,10 @@ export class Aluno {
     return this._http.get(`${this._url}/students?${params.toString()}`);
   }
 
+  public show(alunoId: number): Observable<any> {
+    return this._http.get(`${this._url}/students/${alunoId}`);
+  }
+
   public create(body: any): Observable<any> {
     return this._http.post(`${this._url}/students`, body);
   }
